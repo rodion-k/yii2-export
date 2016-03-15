@@ -12,7 +12,7 @@ class BeanstalkdMailJob extends MailJob
      */
     private $pheanstalkJob;
     /**
-     * @return int the timestamp
+     * @return int the timestamp`
      */
     public function getTimeToSend()
     {

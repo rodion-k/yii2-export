@@ -30,6 +30,8 @@ trait GridViewTrait
         foreach ($this->columns as $i => $column) {
             if (is_string($column)) {
                 $column = $this->createDataColumn($column);
+            } else if ($column instanceof DataColumn) {
+                continue;
             } else {
                 $column = Yii::createObject(array_merge([
                     'class' => $this->dataColumnClass ? : DataColumn::className(),

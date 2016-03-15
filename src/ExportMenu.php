@@ -12,7 +12,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\Url;
 
-class EExportMenu extends Widget
+class ExportMenu extends Widget
 {
     /**
      * Export formats
@@ -299,7 +299,7 @@ SCRIPT;
     protected function parseDropDownOptions ()
     {
         $dropDownOptions = [];
-        $dropDownOptions['options'] = $this->dropDownOptions['menuOptions'];
+        $dropDownOptions['options'] = !empty($this->dropDownOptions['menuOptions']) ? $this->dropDownOptions['menuOptions'] : [];
         $dropDownOptions['items'] = $this->parseDropDownItems();
 
         return $dropDownOptions;
@@ -389,7 +389,7 @@ SCRIPT;
     protected function parseDownloadOptions ()
     {
         return [
-            'filePath' => $this->filename,
+            'filename' => $this->filename,
             'dataProvider' => $this->dataProvider,
             'columns' => $this->columns,
             'exportFooter' => $this->exportFooter,

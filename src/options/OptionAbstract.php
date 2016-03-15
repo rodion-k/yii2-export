@@ -5,6 +5,7 @@ namespace Da\export\options;
 use Yii;
 use yii\base\Object;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveQueryInterface;
 use yii\grid\DataColumn;
 
 abstract class OptionAbstract extends Object implements OptionInterface
@@ -32,14 +33,9 @@ abstract class OptionAbstract extends Object implements OptionInterface
     public $batchSize = 2000;
 
     /**
-     * @var string file path
-     */
-    public $filePath;
-
-    /**
      * @var string filename without extension
      */
-    public $fileName;
+    public $filename;
 
     /**
      * @see ExportMenu target consts
@@ -55,6 +51,10 @@ abstract class OptionAbstract extends Object implements OptionInterface
         parent::init();
 
         $this->initColumns();
+
+        if (empty($this->filename)) {
+            $this->filename = 'report_' . time();
+        }
     }
 
     /**
@@ -89,15 +89,38 @@ abstract class OptionAbstract extends Object implements OptionInterface
         }
 
         $rows = [];
-        $query = $this->dataProvider->query;
-        foreach ($query->batch($this->batchSize) as $models) {
-            /**
-             * @var int $index
-             * @var \yii\db\ActiveRecord $model
-             */
-            foreach ($models as $index => $model) {
-                $key = $model->getPrimaryKey();
-                $rows[] = $this->generateRow($model, $key, $index);
+        if ($this->dataProvider instanceof ActiveQueryInterface) {
+            $query = $this->dataProvider->query;
+            foreach ($query->batch($this->batchSize) as $models) {
+                /**
+                 * @var int $index
+                 * @var \yii\db\ActiveRecord $model
+                 */
+                foreach ($models as $index => $model) {
+                    $key = $model->getPrimaryKey();
+                    $rows[] = $this->generateRow($model, $key, $index);
+                }
+            }
+        } else {
+            $models = $this->dataProvider->getModels();
+            while (count($models) > 0) {
+                /**
+                 * @var int $index
+                 * @var \yii\db\ActiveRecord $model
+                 */
+                $keys = $this->dataProvider->getKeys();
+                foreach ($models as $index => $model) {
+                    $key = $keys[$index];
+                    $rows[] = $this->generateRow($model, $key, $index);
+                }
+
+                if ($this->dataProvider->pagination) {
+                    $this->dataProvider->pagination->page++;
+                    $this->dataProvider->refresh();
+                    $models = $this->dataProvider->getModels();
+                } else {
+                    $models = [];
+                }
             }
         }
 

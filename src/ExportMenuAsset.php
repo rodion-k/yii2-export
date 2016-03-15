@@ -1,6 +1,6 @@
 <?php
 
-namespace common\extensions;
+namespace Da\export;
 
 use yii\web\AssetBundle;
 

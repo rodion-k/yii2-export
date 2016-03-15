@@ -22,12 +22,12 @@ class XlsxOption extends OptionAbstract
             case ExportMenu::TARGET_SELF:
             case ExportMenu::TARGET_BLANK:
                 Yii::$app->controller->layout = false;
-                $spoutObject->openToBrowser($this->filePath . $this->extension);
+                $spoutObject->openToBrowser($this->filename . $this->extension);
                 break;
             case ExportMenu::TARGET_QUEUE:
             default:
                 Yii::$app->controller->layout = false;
-                $spoutObject->openToBrowser($this->filePath . $this->extension);
+                $spoutObject->openToBrowser($this->filename . $this->extension);
                 break;
         }
 
