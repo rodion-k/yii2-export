@@ -1,0 +1,56 @@
+<?php
+namespace Da\export\queue;
+
+use yii\helpers\ArrayHelper;
+
+abstract class AbstractQueueStoreConnection
+{
+    /**
+     * @var mixed the internal connection instance (ie. PDO)
+     */
+    protected $instance;
+
+    /**
+     * @var array
+     */
+    protected $configuration = [];
+
+    /**
+     * AbstractQueueStoreConnection constructor.
+     *
+     * @param array $configuration
+     */
+    protected function __construct(array $configuration = [])
+    {
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * @param $key
+     * @param null $default
+     *
+     * @return mixed
+     */
+    protected function getConfigurationValue($key, $default = null)
+    {
+        return ArrayHelper::getValue($this->configuration, $key, $default);
+    }
+
+    /**
+     * Disconnects previous connection.
+     */
+    public function disconnect()
+    {
+        $this->instance = null;
+    }
+
+    /**
+     * @return AbstractQueueStoreConnection
+     */
+    abstract public function connect();
+
+    /**
+     * @return mixed
+     */
+    abstract public function getInstance();
+}
