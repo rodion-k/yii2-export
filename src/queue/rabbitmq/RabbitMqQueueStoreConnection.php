@@ -1,13 +1,13 @@
 <?php
-namespace Da\export\queue\rabbitmq;
+namespace Da\export\queue\beanstalkd;
 
-use common\extensions\queue\AbstractQueueStoreConnection;
-use PhpAmqpLib\Connection\AMQPConnection;
+use Da\export\queue\AbstractQueueStoreConnection;
+use Pheanstalk\Pheanstalk;
 
-class RabbitMqQueueStoreConnection extends AbstractQueueStoreConnection
+class BeanstalkdQueueStoreConnection extends AbstractQueueStoreConnection
 {
     /**
-     * RabbitMqQueueStoreConnection constructor.
+     * BeanstalkdQueueStoreConnection constructor.
      *
      * @param array $configuration
      *
@@ -19,27 +19,22 @@ class RabbitMqQueueStoreConnection extends AbstractQueueStoreConnection
     }
 
     /**
-     * @return RabbitMqQueueStoreConnection
+     * @return BeanstalkdQueueStoreConnection
      */
     public function connect()
     {
         $this->disconnect();
         $host = $this->getConfigurationValue('host', '127.0.0.1');
-        $port = $this->getConfigurationValue('port', '5672');
-        $user = $this->getConfigurationValue('user', 'guest');
-        $password = $this->getConfigurationValue('password', 'guest');
-        $this->instance = new AMQPConnection(
-            $host,
-            $port,
-            $user,
-            $password
-        );
+        $port = $this->getConfigurationValue('port', Pheanstalk::DEFAULT_PORT);
+        $connectionTimeout = $this->getConfigurationValue('connectionTimeout');
+        $connectPersistent = $this->getConfigurationValue('connectPersistent', false);
+        $this->instance = new Pheanstalk($host, $port, $connectionTimeout, $connectPersistent);
 
         return $this;
     }
 
     /**
-     * @return AMQPConnection
+     * @return Pheanstalk
      */
     public function getInstance()
     {

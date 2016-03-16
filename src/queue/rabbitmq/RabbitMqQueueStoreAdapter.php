@@ -1,8 +1,8 @@
 <?php
 namespace Da\export\queue\rabbitmq;
 
-use commmon\extension\queue\JobInterface;
-use common\extensions\queue\QueueStoreAdapterInterface;
+use Da\export\queue\QueueStoreAdapterInterface;
+use PhpAmqpLib\Message\AMQPMessage;
 use yii\base\Object;
 
 class RabbitMqQueueStoreAdapter extends Object implements QueueStoreAdapterInterface
@@ -42,6 +42,9 @@ class RabbitMqQueueStoreAdapter extends Object implements QueueStoreAdapterInter
     /** @var bool */
     public $ticket = null;
 
+    /** @var bool */
+    public $persistent = false;
+
     /**
      * @var array
      */
@@ -76,7 +79,7 @@ class RabbitMqQueueStoreAdapter extends Object implements QueueStoreAdapterInter
      */
     public function enqueue($message)
     {
-        $this->getConnection()->getChannel()->queue_declare(
+        $this->getConnection()->getInstance()->channel()->queue_declare(
             $this->queueName,
             $this->passive,
             $this->durable,
@@ -87,6 +90,15 @@ class RabbitMqQueueStoreAdapter extends Object implements QueueStoreAdapterInter
             $this->ticket
         );
 
-        $this->getConnection()->getChannel()->basic_publish($message, '', $this->queueName, $this->routingKey);
+        $properties = [];
+        if ($this->persistent) {
+            $properties = [
+                'delivery_mode' => 2
+            ];
+        }
+
+        $msg = new AMQPMessage($message, $properties);
+
+        $this->getConnection()->getInstance()->channel()->basic_publish($msg, '', $this->queueName, $this->routingKey);
     }
 }
