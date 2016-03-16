@@ -24,9 +24,6 @@ class CsvOption extends OptionAbstract
                 Yii::$app->controller->layout = false;
                 $spoutObject->openToBrowser($this->filename . $this->extension);
                 break;
-            case ExportMenu::TARGET_FILE:
-                $spoutObject->openToFile($this->filename . $this->extension);
-                break;
             case ExportMenu::TARGET_QUEUE:
             default:
                 Yii::$app->controller->layout = false;

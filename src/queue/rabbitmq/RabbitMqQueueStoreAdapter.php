@@ -43,6 +43,11 @@ class RabbitMqQueueStoreAdapter extends Object implements QueueStoreAdapterInter
     public $ticket = null;
 
     /**
+     * @var array
+     */
+    public $configuration = [];
+
+    /**
      * @return BeanstalkdQueueStoreAdapter
      */
     public function init()
@@ -57,6 +62,10 @@ class RabbitMqQueueStoreAdapter extends Object implements QueueStoreAdapterInter
      */
     public function getConnection()
     {
+        if (empty($this->connection)) {
+            $this->connection = new RabbitMqQueueStoreConnection($this->configuration);
+        }
+
         return $this->connection;
     }
 
