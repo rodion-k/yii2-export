@@ -4,19 +4,6 @@ namespace Da\export;
 
 class GridView extends \yii\grid\GridView
 {
-    public $responsive;
-    public $striped;
-    public $bootstrap;
-    public $hover;
-    public $floatHeader;
-    public $floatHeaderOptions;
-    public $pjax;
-    public $panel;
-    public $export;
-    public $exportConfig;
-    public $toolbar;
-    public $pjaxSettings;
-
     public $layout = "{export}\n{summary}\n{items}\n{pager}";
 
     /**

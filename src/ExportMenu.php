@@ -110,9 +110,18 @@ class ExportMenu extends Widget
     public $target;
 
     /**
-     * @var QueueStoreAdapterInterface
+     * @var array queue configuration array
+     *
+     * ~~~php
+     * [
+     *      'queueName' => 'test',
+     *      'queueAdapter' => '\Da\export\queue\beanstalkd\BeanstalkdQueueStoreAdapter',
+     *      'queueMessage' => function () {
+     *          return "hi";
+     *      }
+     * ~~~
      */
-    public $queueAdapter;
+    public $queueConfig;
 
     /**
      * @todo
@@ -141,13 +150,7 @@ class ExportMenu extends Widget
     public function run()
     {
         if ($this->target == static::TARGET_QUEUE) {
-            if (empty($this->queueAdapter) && !($this->queueAdapter instanceof QueueStoreAdapterInterface)) {
-                throw new InvalidConfigException('queueAdapter should be filled to use queue');
-            }
-
-            /** @var QueueStoreAdapterInterface $queueInstance */
-            $queueInstance = new $this->queueAdapter();
-            //$queueInstance->enqueue($);
+            $this->dispatchQueue();
         }
 
         if (!empty($this->selectedOption)) {
@@ -155,6 +158,39 @@ class ExportMenu extends Widget
         }
 
         $this->renderForm();
+    }
+
+    protected function dispatchQueue ()
+    {
+        if (!array_key_exists('queueName', $this->queueConfig)) {
+            throw new InvalidConfigException("Your queueConfig param needs to have 'queueName' index.");
+        }
+
+        if (!array_key_exists('queueAdapter', $this->queueConfig)) {
+            throw new InvalidConfigException("Your queueConfig param needs to have 'queueAdapter' index.");
+        }
+
+        if (!array_key_exists('queueMessage', $this->queueConfig)) {
+            throw new InvalidConfigException("Your queueConfig param needs to have 'queueMessage' index.");
+        }
+
+        $queueAdapter = $this->queueConfig['queueAdapter'];
+
+        if (!($queueAdapter instanceof QueueStoreAdapterInterface)) {
+            throw new InvalidConfigException("Your queue adapter must implement QueueStoreAdapterInterface.");
+        }
+
+        /** @var QueueStoreAdapterInterface $queueInstance */
+        $queueInstance = new $queueAdapter([
+            'queueName' => $this->queueConfig['queueName'],
+        ]);
+
+        $queueMessage = $this->queueConfig['queueMessage'];
+        if (is_callable($queueMessage)) {
+            $queueMessage = call_user_func($queueMessage);
+        }
+
+        $queueInstance->enqueue($queueMessage);
     }
 
     /**

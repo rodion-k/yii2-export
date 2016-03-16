@@ -2,7 +2,7 @@
   "name": "ericmaicon/yii2-export",
   "description": "Just another yii2 export menu component.",
   "keywords": ["yii", "extension", "export"],
-  "homepage": "https://github.com/2amigos/yii2-export",
+  "homepage": "https://github.com/ericmaicon/yii2-export",
   "type": "yii2-extension",
   "license": "BSD-3-Clause",
   "authors": [
@@ -14,10 +14,12 @@
   "minimum-stability": "dev",
   "require": {
     "box/spout": "2.4.2",
-    "yiisoft/yii2": "~2.0.0"
+    "yiisoft/yii2": "~2.0.0",
+    "pda/pheanstalk": "^3.1",
+    "videlalvaro/php-amqplib": "2.2.*"
   },
   "require-dev": {
-    "phpunit/phpunit": "5.1.*"
+    "phpunit/phpunit": "4.0.*"
   },
   "autoload": {
     "psr-4": {

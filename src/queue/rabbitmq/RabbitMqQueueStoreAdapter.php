@@ -3,67 +3,53 @@ namespace Da\export\queue\rabbitmq;
 
 use commmon\extension\queue\JobInterface;
 use common\extensions\queue\QueueStoreAdapterInterface;
+use yii\base\Object;
 
-class RabbitMqQueueStoreAdapter implements QueueStoreAdapterInterface
+class RabbitMqQueueStoreAdapter extends Object implements QueueStoreAdapterInterface
 {
     /**
      * @var string the queue name
      */
-    private $queueName;
+    public $queueName;
 
     /**
      * @var string
      */
-    private $routingKey;
+    public $routingKey;
     /**
      * @var RabbitMqQueueStoreConnection
      */
-    protected $connection;
+    public $connection;
 
     /** @var bool */
-    protected $passive=false;
+    public $passive = false;
 
     /** @var bool */
-    protected $durable=false;
+    public $durable = false;
 
     /** @var bool */
-    protected $exclusive=false;
+    public $exclusive = false;
 
     /** @var bool */
-    protected $auto_delete=true;
+    public $auto_delete = true;
 
     /** @var bool */
-    protected $nowait=false;
+    public $nowait = false;
 
     /** @var bool */
-    protected $arguments=null;
+    public $arguments = null;
 
     /** @var bool */
-    protected $ticket=null;
-
-    /**
-     * RabbitMqQueueStoreAdapter constructor.
-     *
-     * @param RabbitMqQueueStoreConnection $connection
-     * @param string $queueName
-     */
-    public function __construct(
-        RabbitMqQueueStoreConnection $connection,
-        $queueName = ''
-    ) {
-        $this->connection = $connection;
-        $this->queueName = $queueName;
-        $this->init();
-    }
+    public $ticket = null;
 
     /**
      * @return BeanstalkdQueueStoreAdapter
      */
     public function init()
     {
-        $this->getConnection()->connect();
+        parent::init();
 
-        return $this;
+        $this->getConnection()->connect();
     }
 
     /**
@@ -75,11 +61,11 @@ class RabbitMqQueueStoreAdapter implements QueueStoreAdapterInterface
     }
 
     /**
-     * @param JobInterface $job
+     * @param string $message
      *
      * @return int
      */
-    public function enqueue(JobInterface $job)
+    public function enqueue($message)
     {
         $this->getConnection()->getChannel()->queue_declare(
             $this->queueName,
@@ -92,28 +78,6 @@ class RabbitMqQueueStoreAdapter implements QueueStoreAdapterInterface
             $this->ticket
         );
 
-        $this->getConnection()->getChannel()->basic_publish($job->getMessage(), '', $this->queueName, $this->routingKey);
-    }
-
-    /**
-     * @return JobInterface|null
-     */
-    public function dequeue()
-    {
-    }
-
-    /**
-     * @param JobInterface $mailJob
-     */
-    public function ack(JobInterface $mailJob)
-    {
-    }
-
-    /**
-     *
-     * @return bool
-     */
-    public function isEmpty()
-    {
+        $this->getConnection()->getChannel()->basic_publish($message, '', $this->queueName, $this->routingKey);
     }
 }
