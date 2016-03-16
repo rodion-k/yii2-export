@@ -1,9 +1,15 @@
-# just another Yii2 Export Widget for Yii2
+# Just another Yii2 Export Widget for Yii2
 
 [![Latest Version](https://img.shields.io/github/tag/ericmaicon/yii2-export.svg?style=flat-square&label=release)](https://github.com/ericmaicon/yii2-export/tags)
 [![Build Status](https://img.shields.io/travis/ericmaicon/yii2-export/master.svg?style=flat-square)](https://travis-ci.org/ericmaicon/yii2-export)
 
-Just another Yii2 export widget plugin
+The main purpose of this library is not replace [kartik-v/yii2-export](https://github.com/kartik-v/yii2-export). Kartik's one has a lot of features not implemented on this one.
+
+This is a new yii2-export widget wrote from the scratch to improve performance.
+
+The idea of this one appeared when PHPExcel doesn't fit to generate large excel files in a fast way. The first feature was dispatch reports to be generated in queues.
+
+Not enough, another feature was replace PHPExcel with [spout](https://github.com/box/spout), successfully reducing the time consuming.
 
 ## Installation
 
@@ -25,7 +31,53 @@ to the `require` section of your `composer.json` file.
 
 ## Usage
 
-TODO
+You can use inside of a regular grid:
+
+```
+```
+
+Use the grid present here:
+
+```
+```
+
+Use inside of Kartik's grid:
+
+```
+```
+
+Use with queue:
+
+```
+```
+
+Stand-alone use:
+
+```
+
+```
+
+Another configurations:
+
+*Target*
+
+```
+```
+
+*Filename*
+
+```
+```
+
+*Export Footer*
+
+*Options*
+
+*Dropdown Options*
+
+*Dropdown Items*
+
+*Selected Option*
 
 ## Testing
 
@@ -35,4 +87,9 @@ $ ./vendor/bin/phpunit
 
 ## What is missing?
 
-TODO
+1. PDF, HTML and TXT export options
+2. Confirm Alert
+3. Column selectors
+4. Store file
+5. Events
+6. Internationalization

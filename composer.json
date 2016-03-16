@@ -14,7 +14,8 @@
   "minimum-stability": "dev",
   "require": {
     "box/spout": "2.4.2",
-    "yiisoft/yii2": "~2.0.0",
+    "yiisoft/yii2": "2.0.7",
+    "yiisoft/yii2-bootstrap": "2.0.5",
     "pda/pheanstalk": "^3.1",
     "videlalvaro/php-amqplib": "2.2.*"
   },
@@ -24,6 +25,12 @@
   "autoload": {
     "psr-4": {
       "Da\\export\\": "src"
+    }
+  },
+  "extra": {
+    "asset-installer-paths": {
+      "npm-asset-library": "vendor/npm",
+      "bower-asset-library": "vendor/bower"
     }
   }
 }

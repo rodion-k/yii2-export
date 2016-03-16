@@ -7,6 +7,11 @@ class GridView extends \yii\grid\GridView
     public $layout = "{export}\n{summary}\n{items}\n{pager}";
 
     /**
+     * @var array export config
+     */
+    public $exportConfig;
+
+    /**
      * @inheritdoc
      */
     public function run ()
