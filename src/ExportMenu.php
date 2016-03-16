@@ -6,7 +6,6 @@ use Da\export\options\CsvOption;
 use Da\export\options\OptionInterface;
 use Da\export\options\OptionAbstract;
 use Da\export\options\XlsxOption;
-use Da\export\queue\QueueStoreAdapterInterface;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
@@ -176,7 +175,7 @@ class ExportMenu extends Widget
 
         $queueAdapter = $this->queueConfig['queueAdapter'];
 
-        if (!($queueAdapter instanceof QueueStoreAdapterInterface)) {
+        if (!is_subclass_of($queueAdapter, '\Da\export\queue\QueueStoreAdapterInterface')) {
             throw new InvalidConfigException("Your queue adapter must implement QueueStoreAdapterInterface.");
         }
 

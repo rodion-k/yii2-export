@@ -24,6 +24,11 @@ class BeanstalkdQueueStoreAdapter extends Object implements QueueStoreAdapterInt
     public $timeToRun;
 
     /**
+     * @var array
+     */
+    public $configuration = [];
+
+    /**
      * @var BeanstalkdQueueStoreConnection
      */
     protected $connection;
@@ -43,6 +48,10 @@ class BeanstalkdQueueStoreAdapter extends Object implements QueueStoreAdapterInt
      */
     public function getConnection()
     {
+        if (empty($this->connection)) {
+            $this->connection = new BeanstalkdQueueStoreConnection($this->configuration);
+        }
+
         return $this->connection;
     }
 
