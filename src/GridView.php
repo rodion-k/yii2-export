@@ -48,6 +48,9 @@ class GridView extends \yii\grid\GridView
     private function exportConfig ()
     {
         $exportConfig = $this->exportConfig;
+        if (empty($exportConfig)) {
+            $exportConfig = [];
+        }
 
         return array_merge(
             $exportConfig,

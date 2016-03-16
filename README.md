@@ -31,24 +31,31 @@ to the `require` section of your `composer.json` file.
 
 ## Usage
 
-You can use inside of a regular grid:
+Using with the Grid:
 
 ```
+<?= \Da\export\GridView::widget([
+    'dataProvider' => $dataProvider,
+]); ?>
 ```
 
-Use the grid present here:
+To use Kartik's grid you will need to override renderExport method:
 
 ```
-```
+<?php
 
-Use inside of Kartik's grid:
+use Da\export\ExportMenu;
 
-```
-```
-
-Use with queue:
-
-```
+class GridView extends \kartik\grid\GridView
+{
+    public function renderExport()
+    {
+        return ExportMenu::widget([
+            'dataProvider' => $this->dataProvider,
+            'columns' => $this->columns,
+        ]);
+    }
+}
 ```
 
 Stand-alone use:
@@ -59,25 +66,88 @@ Stand-alone use:
 
 Another configurations:
 
+*Queue*
+
+```
+[
+    'target' => \Da\export\ExportMenu::TARGET_QUEUE,
+    'queueConfig' => [
+        'queueName' => \common\models\ReportModel::REPORT_TUBE,
+        'queueAdapter' => \Da\export\queue\rabbitmq\RabbitMqQueueStoreAdapter::className(),
+        'queueMessage' => function () {
+
+        }
+    ]
+]
+```
+
 *Target*
 
 ```
+[
+    'target' => \Da\export\ExportMenu::TARGET_SELF,
+]
 ```
 
 *Filename*
 
 ```
+[
+    'filename' => 'test',
+]
 ```
 
 *Export Footer*
 
+```
+[
+    'exportFooter' => true,
+]
+```
+
 *Options*
+
+```
+[
+    'class' => 'btn-group',
+]
+```
 
 *Dropdown Options*
 
+```
+[
+    'class' => 'btn btn-default',
+    'label' => 'Export',
+    'menuOptions' => [
+        'class' => 'dropdown-menu dropdown-menu-right'
+    ]
+]
+```
+
 *Dropdown Items*
 
+```
+[
+    ExportMenu::FORMAT_CSV => [
+        'label' => 'CSV',
+        'options' => [
+            'title' => 'Comma Separated Values',
+            'data-id' => ExportMenu::FORMAT_CSV,
+        ],
+        'url' => 'javascript:;',
+        'className' => CsvOption::className(),
+    ]
+]
+```
+
 *Selected Option*
+
+```
+[
+    'selectedOption' => ExportMenu::FORMAT_CSV,
+]
+```
 
 ## Testing
 
